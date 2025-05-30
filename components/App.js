@@ -5,7 +5,6 @@ import {
     StorageManager, 
     ToolManager, 
     PerformanceMonitor, 
-    KeyboardManager 
 } from '../utils/EventHandlers.js';
 
 /**
@@ -24,7 +23,6 @@ class PathfinderApp {
         
         // Initialize utilities
         this.performanceMonitor = new PerformanceMonitor();
-        this.keyboardManager = new KeyboardManager();
         
         // Application state
         this.isRunning = false;
@@ -171,24 +169,6 @@ class PathfinderApp {
         astarGridEl.addEventListener('mousedown', () => { if (this.isRunning) this.stopAlgorithms(); });
     }
     
-    /**
-     * Setup keyboard shortcuts
-     */
-    // setupKeyboardShortcuts() {
-    //     this.keyboardManager.registerShortcut('space', () => this.findPaths(), 'Find Path');
-    //     this.keyboardManager.registerShortcut('escape', () => this.stopAlgorithms(), 'Stop Algorithms');
-    //     this.keyboardManager.registerShortcut('ctrl+s', () => this.saveGrid(), 'Save Grid');
-    //     this.keyboardManager.registerShortcut('ctrl+o', () => this.loadGrid(), 'Load Grid');
-    //     this.keyboardManager.registerShortcut('ctrl+r', () => this.generateRandomMaze(), 'Random Maze');
-    //     this.keyboardManager.registerShortcut('delete', () => this.clearGrids(), 'Clear Grid');
-        
-    //     // Tool shortcuts
-    //     this.keyboardManager.registerShortcut('1', () => ToolManager.setActiveTool('start'), 'Set Start Tool');
-    //     this.keyboardManager.registerShortcut('2', () => ToolManager.setActiveTool('end'), 'Set End Tool');
-    //     this.keyboardManager.registerShortcut('3', () => ToolManager.setActiveTool('wall'), 'Wall Tool');
-    //     this.keyboardManager.registerShortcut('4', () => ToolManager.setActiveTool('weight'), 'Weight Tool');
-    //     this.keyboardManager.registerShortcut('5', () => ToolManager.setActiveTool('eraser'), 'Eraser Tool');
-    // }
     
     /**
      * Setup grid synchronization

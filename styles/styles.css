@@ -19,8 +19,6 @@ body {
     min-height: 100vh;
     background: rgba(255,255,255,0.85);
     backdrop-filter: blur(10px);
-    margin: 24px;
-    border-radius: 18px;
     box-shadow: 0 8px 32px rgba(120, 140, 120, 0.10);
     overflow: hidden;
     padding-bottom: 12px;
@@ -31,7 +29,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 30px;
+    padding: 10px 20px;
     background: linear-gradient(90deg, #b7d8b7 0%, #e6e9d7 100%);
     color: #5a5a5a;
     box-shadow: 0 2px 12px rgba(120, 140, 120, 0.10);
@@ -253,7 +251,7 @@ body {
     text-align: center;
     margin-bottom: 15px;
     color: #333;
-    font-size: 1.3rem;
+    font-size: 1rem;
     font-weight: 600;
 }
 
@@ -452,7 +450,7 @@ body {
     display: flex;
     justify-content: space-around;
     background: #f7f5ef;
-    padding: 15px;
+    padding: 10px;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(180, 140, 167, 0.07);
 }
@@ -599,20 +597,12 @@ body {
 
 /* Legend */
 .legend {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
     display: flex;
     gap: 15px;
-    background: white;
-    padding: 12px 20px;
-    border-radius: 25px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    backdrop-filter: blur(10px);
+    border-radius: 18px;
     flex-wrap: wrap;
-    max-width: 90vw;
     justify-content: center;
+    align-items: center;
 }
 
 .legend-item {
@@ -651,7 +641,6 @@ body {
     border-radius: 5px;
     margin-right: 6px;
     vertical-align: middle;
-    border: 1.5px solid #ccc;
     background-color: #fff;
 }
 .legend-img-sand {
@@ -701,9 +690,10 @@ body {
     }
     
     .legend {
-        position: relative;
-        margin: 20px auto;
-        transform: none;
+        padding: 10px 6px;
+        border-radius: 12px;
+        margin: 0 auto 16px auto;
+        gap: 10px;
     }
     
     .grid {
@@ -936,15 +926,10 @@ body {
         max-height: 98vw;
     }
     .legend {
-        position: static !important;
-        left: 0;
-        bottom: auto;
-        transform: none;
-        max-width: 100vw;
-        border-radius: 0;
-        box-shadow: 0 2px 8px rgba(120, 140, 120, 0);
-        justify-content: center;
-        flex-wrap: wrap;
+        padding: 10px 6px;
+        border-radius: 12px;
+        margin: 0 auto 16px auto;
+        gap: 10px;
     }
 }
 
@@ -1008,7 +993,6 @@ body {
 
 @media (max-width: 600px) {
     .responsive-header-btns {
-        flex-direction: column;
         align-items: stretch;
         gap: 4px;
     }

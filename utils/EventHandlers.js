@@ -150,7 +150,28 @@ export class StorageManager {
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
         notification.textContent = message;
-        
+
+        // Create close button
+        const closeBtn = document.createElement('span');
+        closeBtn.textContent = '×';
+        closeBtn.className = 'notification-close-btn';
+        closeBtn.style.cssText = `
+            position: absolute;
+            top: 6px;
+            right: 12px;
+            font-size: 1.3em;
+            color: #888;
+            cursor: pointer;
+            font-weight: bold;
+            z-index: 2;
+            background: none;
+            border: none;
+        `;
+        closeBtn.onclick = () => {
+            if (notification.parentNode) notification.parentNode.removeChild(notification);
+        };
+        notification.appendChild(closeBtn);
+
         // Style the notification
         Object.assign(notification.style, {
             position: 'fixed',
@@ -164,33 +185,32 @@ export class StorageManager {
             transform: 'translateX(100%)',
             transition: 'transform 0.3s ease',
             maxWidth: '300px',
-            wordWrap: 'break-word'
+            wordWrap: 'break-word',
+            boxSizing: 'border-box',
+            background: (type === 'success') ? '#4CAF50' :
+                       (type === 'error') ? '#f44336' :
+                       (type === 'warning') ? '#FF9800' :
+                       (type === 'info') ? '#2196F3' : '#2196F3',
         });
-        
-        // Set background color based on type
-        const colors = {
-            success: '#4CAF50',
-            error: '#f44336',
-            warning: '#FF9800',
-            info: '#2196F3'
-        };
-        notification.style.background = colors[type] || colors.info;
-        
+
         // Add to document
         document.body.appendChild(notification);
-        
+
         // Animate in
         setTimeout(() => {
             notification.style.transform = 'translateX(0)';
         }, 10);
-        
-        // Remove after delay
-        setTimeout(() => {
+
+        // Remove after delay (unless already removed)
+        const removeTimeout = setTimeout(() => {
             notification.style.transform = 'translateX(100%)';
             setTimeout(() => {
-                document.body.removeChild(notification);
+                if (notification.parentNode) document.body.removeChild(notification);
             }, 300);
         }, 3000);
+
+        // If closed manually, clear the timeout
+        closeBtn.addEventListener('click', () => clearTimeout(removeTimeout));
     }
 }
 

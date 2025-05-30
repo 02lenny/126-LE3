@@ -11,7 +11,7 @@
         <!-- Header -->
         <header class="header">
             <div class="header-left">
-                <img src="assets/logo.png" alt="ZenPaths Logo" class="app-logo" style="height:68px;max-width:160px;object-fit:contain;" />
+                <img src="assets/Logo.png" alt="ZenPaths Logo" class="app-logo" style="height:68px;max-width:160px;object-fit:contain;" />
             </div>
             <div class="header-right responsive-header-btns">
                 <button id="save-grid" class="btn btn-secondary">Save Grid</button>
@@ -22,41 +22,8 @@
         </header>
         <!-- Sidebar toggle button below header -->
         <button id="sidebar-toggle" class="btn btn-secondary" style="width:100%;margin:0 0 12px 0;display:none;">☰ Menu</button>
-        <!-- Algorithm Legend: move here so it's below the menu button on mobile -->
-        <div class="legend">
-            <div class="legend-item">
-                <span class="legend-img" style="background-image:url('assets/start.png');"></span>
-                <span>Start</span>
-            </div>
-            <div class="legend-item">
-                <span class="legend-img" style="background-image:url('assets/end.png');"></span>
-                <span>End</span>
-            </div>
-            <div class="legend-item">
-                <span class="legend-img" style="background-image:url('assets/stone.png');"></span>
-                <span>Wall</span>
-            </div>
-            <div class="legend-item">
-                <span class="legend-img" style="background-image:url('assets/flower.png');"></span>
-                <span>Flower (2)</span>
-            </div>
-            <div class="legend-item">
-                <span class="legend-img" style="background-image:url('assets/shroom.png');"></span>
-                <span>Shroom (5)</span>
-            </div>
-            <div class="legend-item">
-                <span class="legend-img" style="background-image:url('assets/grass.png');"></span>
-                <span>Grass (10)</span>
-            </div>
-            <div class="legend-item">
-                <span class="legend-img legend-img-sand"></span>
-                <span>Explored</span>
-            </div>
-            <div class="legend-item">
-                <span class="legend-img" style="background-image:url('assets/path.png');"></span>
-                <span>Path</span>
-            </div>
-        </div>
+        <!-- Sidebar overlay for mobile -->
+        <div id="sidebar-overlay" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100%;background:rgba(0,0,0,0.18);z-index:2;"></div>
 
         <!-- Main Content -->
         <main class="main-content">
@@ -121,8 +88,44 @@
                 </div>
             </aside>
 
+            <!-- Legend above grids -->
             <!-- Content Area -->
             <div class="content-area">
+                <div class="legend">
+                    <label>Legend:</label>
+                    <div class="legend-item">
+                        <span class="legend-img" style="background-image:url('assets/start.png');"></span>
+                        <span>Start</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-img" style="background-image:url('assets/end.png');"></span>
+                        <span>End</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-img" style="background-image:url('assets/stone.png');"></span>
+                        <span>Wall</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-img" style="background-image:url('assets/flower.png');"></span>
+                        <span>Flower (2)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-img" style="background-image:url('assets/shroom.png');"></span>
+                        <span>Shroom (5)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-img" style="background-image:url('assets/grass.png');"></span>
+                        <span>Grass (10)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-img legend-img-sand"></span>
+                        <span>Explored</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-img" style="background-image:url('assets/path.png');"></span>
+                        <span>Path</span>
+                    </div>
+                </div>
                 <!-- Grids Container -->
                 <div class="grids-container">
                     <div class="grid-wrapper">
@@ -204,6 +207,7 @@
     // Sidebar toggle for mobile responsiveness
     const sidebar = document.getElementById('sidebar');
     const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
     function updateSidebarToggle() {
         if (window.innerWidth <= 900) {
             sidebarToggle.style.display = 'block';
@@ -212,10 +216,22 @@
         } else {
             sidebarToggle.style.display = 'none';
             sidebar.classList.remove('collapsed');
+            sidebarOverlay.style.display = 'none';
         }
     }
     sidebarToggle.addEventListener('click', () => {
-        sidebar.classList.toggle('collapsed');
+        const isCollapsed = sidebar.classList.toggle('collapsed');
+        if (!isCollapsed) {
+            // Sidebar is now open
+            sidebarOverlay.style.display = 'block';
+        } else {
+            // Sidebar is now closed
+            sidebarOverlay.style.display = 'none';
+        }
+    });
+    sidebarOverlay.addEventListener('click', () => {
+        sidebar.classList.add('collapsed');
+        sidebarOverlay.style.display = 'none';
     });
     window.addEventListener('resize', updateSidebarToggle);
     document.addEventListener('DOMContentLoaded', updateSidebarToggle);

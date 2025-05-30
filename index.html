@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZenPaths</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <img src="assets/logo.png" alt="ZenPaths Logo" class="app-logo" style="height:68px;max-width:160px;object-fit:contain;" />
+            </div>
+            <div class="header-right responsive-header-btns">
+                <button id="save-grid" class="btn btn-secondary">Save Grid</button>
+                <button id="load-grid" class="btn btn-secondary">Load Grid</button>
+                <button id="find-path" class="btn btn-primary">Find Path</button>
+                <button id="clear-grid" class="btn btn-secondary">Clear</button>
+            </div>
+        </header>
+        <!-- Sidebar toggle button below header -->
+        <button id="sidebar-toggle" class="btn btn-secondary" style="width:100%;margin:0 0 12px 0;display:none;">☰ Menu</button>
+        <!-- Algorithm Legend: move here so it's below the menu button on mobile -->
+        <div class="legend">
+            <div class="legend-item">
+                <span class="legend-img" style="background-image:url('assets/start.png');"></span>
+                <span>Start</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-img" style="background-image:url('assets/end.png');"></span>
+                <span>End</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-img" style="background-image:url('assets/stone.png');"></span>
+                <span>Wall</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-img" style="background-image:url('assets/flower.png');"></span>
+                <span>Flower (2)</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-img" style="background-image:url('assets/shroom.png');"></span>
+                <span>Shroom (5)</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-img" style="background-image:url('assets/grass.png');"></span>
+                <span>Grass (10)</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-img legend-img-sand"></span>
+                <span>Explored</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-img" style="background-image:url('assets/path.png');"></span>
+                <span>Path</span>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-content">
+                    <div class="sidebar-section">
+                        <h3>Controls</h3>
+                        <div class="control-group">
+                            <label for="speed-selector">Animation Speed:</label>
+                            <select id="speed-selector">
+                                <option value="fast">Fast</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="slow">Slow</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label for="grid-size">Grid Size:</label>
+                            <select id="grid-size">
+                                <option value="5">5x5</option>
+                                <option value="10" selected>10x10</option>
+                                <option value="15">15x15</option>
+                                <option value="20">20x20</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                            <div id="custom-grid-container" style="display:none; margin-top:8px;">
+                                <div class="custom-grid-header" style="font-weight:600; color:#333; margin-bottom:2px;">Custom Grid Size</div>
+                                <div class="custom-grid-note" style="font-size:12px; color:#888; margin-bottom:6px;">Enter a number between 2 and 50. The grid will remain square (1:1 ratio).</div>
+                                <input type="number" id="custom-grid-size" class="custom-grid-input" min="2" max="50" placeholder="Enter size..." />
+                                <div id="custom-grid-warning" style="display:none; color:#d9534f; font-size:12px; margin-top:4px;">Warning: Grid sizes above 30 may be hard to see or interact with.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>Tools</h3>
+                        <div class="tool-buttons">
+                            <button id="tool-start" class="tool-btn" data-tool="start">Set Start</button>
+                            <button id="tool-end" class="tool-btn" data-tool="end">Set End</button>
+                            <button id="tool-wall" class="tool-btn active" data-tool="wall">Wall</button>
+                            <button id="tool-weight" class="tool-btn" data-tool="weight">Weight</button>
+                            <button id="tool-eraser" class="tool-btn" data-tool="eraser">Eraser</button>
+                        </div>
+                        <div class="control-group">
+                            <label for="weight-selector">Weight (Garden Element):</label>
+                            <select id="weight-selector">
+                                <option value="1" selected>1 (Default)</option>
+                                <option value="2">2 (Flower 🌸)</option>
+                                <option value="5">5 (Shroom 🍄)</option>
+                                <option value="10">10 (Grass 🌾)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-section">
+                        <h3>Randomizer</h3>
+                        <button id="random-maze" class="tool-btn btn-secondary full-width">Random Maze</button>
+                        <button id="random-points" class="tool-btn btn-secondary full-width">Random Start & End</button>
+                        <button id="random-weights" class="tool-btn btn-secondary full-width">Random Weights</button>
+                        <button id="random-environment" class="tool-btn btn-secondary full-width">Random Environment</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Grids Container -->
+                <div class="grids-container">
+                    <div class="grid-wrapper">
+                        <h2>Dijkstra's Algorithm</h2>
+                        <div id="dijkstra-grid" class="grid"></div>
+                        <div class="stats">
+                            <div class="stat">
+                                <span class="stat-label">Nodes Explored:</span>
+                                <span id="dijkstra-explored" class="stat-value">0</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Path Length:</span>
+                                <span id="dijkstra-path-length" class="stat-value">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-wrapper">
+                        <h2>A* Search Algorithm</h2>
+                        <div id="astar-grid" class="grid"></div>
+                        <div class="stats">
+                            <div class="stat">
+                                <span class="stat-label">Nodes Explored:</span>
+                                <span id="astar-explored" class="stat-value">0</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Path Length:</span>
+                                <span id="astar-path-length" class="stat-value">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analysis Section -->
+                <div class="analysis-section">
+                    <div class="analysis-header" id="analysis-toggle">
+                        <h3>Algorithm Analysis & Comparison</h3>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="analysis-content" id="analysis-content">
+                        <div id="analysis-results">
+                            <p style="text-align: center; color: #666; font-style: italic;">
+                                Run pathfinding algorithms to see detailed analysis and comparison here.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Save Grid Modal -->
+    <div id="save-grid-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="modal-close" id="close-save-modal">&times;</span>
+            <h3>Save Grid</h3>
+            <label for="save-grid-name">Grid Name:</label>
+            <input type="text" id="save-grid-name" class="custom-grid-input" maxlength="32" placeholder="Enter a name..." />
+            <button id="confirm-save-grid" class="btn btn-primary full-width" style="margin-top:12px;">Save</button>
+        </div>
+    </div>
+    <!-- Load Grid Modal -->
+    <div id="load-grid-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="modal-close" id="close-load-modal">&times;</span>
+            <h3>Load Saved Grid</h3>
+            <div id="saved-grids-list" style="margin-top:10px;"></div>
+        </div>
+    </div>
+
+    <!-- JavaScript Modules -->
+    <script type="module" src="components/Node.js"></script>
+    <script type="module" src="components/Grid.js"></script>
+    <script type="module" src="algorithms/Dijkstra.js"></script>
+    <script type="module" src="algorithms/AStar.js"></script>
+    <script type="module" src="utils/EventHandlers.js"></script>
+    <script type="module" src="components/App.js"></script>
+    <script>
+    // Sidebar toggle for mobile responsiveness
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    function updateSidebarToggle() {
+        if (window.innerWidth <= 900) {
+            sidebarToggle.style.display = 'block';
+            sidebar.classList.add('collapsible');
+            sidebar.classList.add('collapsed');
+        } else {
+            sidebarToggle.style.display = 'none';
+            sidebar.classList.remove('collapsed');
+        }
+    }
+    sidebarToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('collapsed');
+    });
+    window.addEventListener('resize', updateSidebarToggle);
+    document.addEventListener('DOMContentLoaded', updateSidebarToggle);
+    </script>
+</body>
+</html>
